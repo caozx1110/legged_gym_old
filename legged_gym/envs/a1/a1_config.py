@@ -31,6 +31,44 @@
 from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobotCfgPPO
 
 class A1RoughCfg( LeggedRobotCfg ):
+    class terrain( LeggedRobotCfg.terrain ):
+        # TODO: 在这里修改地形
+        # mesh_type = 'plane'
+        
+        '''所有地形可视化'''
+        # num_rows = 10
+        # num_cols = 8
+        # terrain_proportions = [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
+        
+        '''上金字塔楼梯 + 课程学习'''
+        # num_rows = 10
+        # num_cols = 40
+        # terrain_proportions = [0, 0, 1, 0, 0, 0, 0, 0]
+        
+        '''不平坦地形 + 课程学习'''
+        num_rows = 10
+        num_cols = 40
+        terrain_proportions = [0, 1, 0, 0, 0, 0, 0, 0]
+        
+        
+        '''湿滑地面'''
+        # static_friction = 0.45
+        # dynamic_friction = 0.05
+        # terrain_kwargs = {'type': 'sloped_terrain', 'slope': 0}
+        
+        '''选择特定地形'''
+        # curriculum = False
+        # selected = True
+        # terrain_kwargs = {'type': 'random_uniform_terrain', 'min_height': 0.0, 'max_height': 0.05, 'step': 0.005}
+        # terrain_kwargs = {'type': 'sloped_terrain', 'slope': 0.1}
+        # terrain_kwargs = {'type': 'pyramid_sloped_terrain', 'slope': 0.2, 'platform_size': 4}
+        # terrain_kwargs = {'type': 'discrete_obstacles_terrain', 'max_height': 1, 'min_size': 0.2, 'max_size': 1, 'num_rects': 1, 'platform_size': 2}
+        # terrain_kwargs = {'type': 'wave_terrain', 'num_waves': 1, 'amplitude': 0.5}
+        # terrain_kwargs = {'type': 'stairs_terrain', 'step_height': 0.1, 'step_width': 0.5}
+        # terrain_kwargs = {'type': 'pyramid_stairs_terrain', 'step_width': 0.5, 'step_height': 0.1, 'platform_size': 2}
+        # terrain_kwargs = {'type': 'stepping_stones_terrain', 'stone_size': 0.5, 'stone_distance': 0.1, 'max_height': 0.1, 'platform_size': 2, 'depth': -10}
+        
+    
     class init_state( LeggedRobotCfg.init_state ):
         pos = [0.0, 0.0, 0.42] # x,y,z [m]
         default_joint_angles = { # = target angles [rad] when action = 0.0

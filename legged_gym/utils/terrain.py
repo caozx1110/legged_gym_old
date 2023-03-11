@@ -33,6 +33,7 @@ from numpy.random import choice
 from scipy import interpolate
 
 from isaacgym import terrain_utils
+from isaacgym.terrain_utils import *
 from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg
 
 class Terrain:
@@ -58,6 +59,7 @@ class Terrain:
         self.tot_rows = int(cfg.num_rows * self.length_per_env_pixels) + 2 * self.border
 
         self.height_field_raw = np.zeros((self.tot_rows , self.tot_cols), dtype=np.int16)
+        # NOTE: 选项设置
         if cfg.curriculum:
             self.curiculum()
         elif cfg.selected:
@@ -96,14 +98,14 @@ class Terrain:
         for k in range(self.cfg.num_sub_terrains):
             # Env coordinates in the world
             (i, j) = np.unravel_index(k, (self.cfg.num_rows, self.cfg.num_cols))
-
+            # FIX: vertical_scale, horizontal_scale少了cfg
             terrain = terrain_utils.SubTerrain("terrain",
                               width=self.width_per_env_pixels,
                               length=self.width_per_env_pixels,
-                              vertical_scale=self.vertical_scale,
-                              horizontal_scale=self.horizontal_scale)
-
-            eval(terrain_type)(terrain, **self.cfg.terrain_kwargs.terrain_kwargs)
+                              vertical_scale=self.cfg.vertical_scale,
+                              horizontal_scale=self.cfg.horizontal_scale)
+            # EXPLAIN: terrain_type 转函数对象
+            eval(terrain_type)(terrain, **self.cfg.terrain_kwargs)
             self.add_terrain_to_map(terrain, i, j)
     
     def make_terrain(self, choice, difficulty):
@@ -154,6 +156,7 @@ class Terrain:
         end_y = self.border + (j + 1) * self.width_per_env_pixels
         self.height_field_raw[start_x: end_x, start_y:end_y] = terrain.height_field_raw
 
+        # NOTE: 获取原点
         env_origin_x = (i + 0.5) * self.env_length
         env_origin_y = (j + 0.5) * self.env_width
         x1 = int((self.env_length/2. - 1) / terrain.horizontal_scale)
