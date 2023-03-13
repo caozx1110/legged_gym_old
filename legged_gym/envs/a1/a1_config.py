@@ -46,10 +46,14 @@ class A1RoughCfg( LeggedRobotCfg ):
         # terrain_proportions = [0, 0, 1, 0, 0, 0, 0, 0]
         
         '''不平坦地形 + 课程学习'''
+        # num_rows = 10
+        # num_cols = 40
+        # terrain_proportions = [0, 1, 0, 0, 0, 0, 0, 0]
+        
+        '''阶梯障碍 + 课程学习'''
         num_rows = 10
         num_cols = 40
-        terrain_proportions = [0, 1, 0, 0, 0, 0, 0, 0]
-        
+        terrain_proportions = [0, 0, 0, 0, 1, 0, 0, 0]
         
         '''湿滑地面'''
         # static_friction = 0.45
