@@ -132,6 +132,8 @@ class LeggedRobotCfg(BaseConfig):
             termination = -0.0
             tracking_lin_vel = 1.0
             tracking_ang_vel = 0.5
+            # tracking_lin_vel = 5.0
+            # tracking_ang_vel = 2.0
             lin_vel_z = -2.0
             ang_vel_xy = -0.05
             orientation = -0.
@@ -199,6 +201,53 @@ class LeggedRobotCfg(BaseConfig):
             default_buffer_size_multiplier = 5
             contact_collection = 2 # 0: never, 1: last sub-step, 2: all sub-steps (default=2)
 
+# PPO config
+# class LeggedRobotCfgPPO(BaseConfig):
+#     seed = 1
+#     runner_class_name = 'OnPolicyRunner'
+#     class policy:
+#         init_noise_std = 1.0
+#         actor_hidden_dims = [512, 256, 128]
+#         critic_hidden_dims = [512, 256, 128]
+#         activation = 'elu' # can be elu, relu, selu, crelu, lrelu, tanh, sigmoid
+#         # only for 'ActorCriticRecurrent':
+#         # rnn_type = 'lstm'
+#         # rnn_hidden_size = 512
+#         # rnn_num_layers = 1
+        
+#     class algorithm:
+#         # training params
+#         value_loss_coef = 1.0
+#         use_clipped_value_loss = True
+#         clip_param = 0.2
+#         entropy_coef = 0.01
+#         num_learning_epochs = 5
+#         num_mini_batches = 4 # mini batch size = num_envs*nsteps / nminibatches
+#         learning_rate = 1.e-3 #5.e-4
+#         schedule = 'adaptive' # could be adaptive, fixed
+#         gamma = 0.99
+#         lam = 0.95
+#         desired_kl = 0.01
+#         max_grad_norm = 1.
+
+#     class runner:
+#         policy_class_name = 'ActorCritic'
+#         algorithm_class_name = 'PPO'
+#         num_steps_per_env = 24 # per iteration
+#         max_iterations = 1500 # number of policy updates
+
+#         # logging
+#         save_interval = 50 # check for potential saves every this many iterations
+#         experiment_name = 'test'
+#         run_name = ''
+#         # load and resume
+#         resume = False
+#         load_run = -1 # -1 = last run
+#         checkpoint = -1 # -1 = last saved model
+#         resume_path = None # updated from load_run and chkpt
+        
+
+# NOTE: SAC here!, 不要被命名误导
 class LeggedRobotCfgPPO(BaseConfig):
     seed = 1
     runner_class_name = 'OnPolicyRunner'
@@ -214,22 +263,20 @@ class LeggedRobotCfgPPO(BaseConfig):
         
     class algorithm:
         # training params
-        value_loss_coef = 1.0
-        use_clipped_value_loss = True
-        clip_param = 0.2
-        entropy_coef = 0.01
-        num_learning_epochs = 5
-        num_mini_batches = 4 # mini batch size = num_envs*nsteps / nminibatches
-        learning_rate = 1.e-3 #5.e-4
-        schedule = 'adaptive' # could be adaptive, fixed
-        gamma = 0.99
-        lam = 0.95
-        desired_kl = 0.01
-        max_grad_norm = 1.
+        num_learning_epochs=5
+        num_mini_batches=4
+        gamma=0.98
+        reward_scale=0.99
+        learning_rate=1e-4
+        soft_target_tau=0.005
+        target_update_period=1
+        use_automatic_entropy_tuning=True
+        target_entropy=None
+        action_dim=12
 
     class runner:
-        policy_class_name = 'ActorCritic'
-        algorithm_class_name = 'PPO'
+        policy_class_name = 'SoftActorCritic'
+        algorithm_class_name = 'SAC'
         num_steps_per_env = 24 # per iteration
         max_iterations = 1500 # number of policy updates
 
@@ -241,4 +288,4 @@ class LeggedRobotCfgPPO(BaseConfig):
         resume = False
         load_run = -1 # -1 = last run
         checkpoint = -1 # -1 = last saved model
-        resume_path = None # updated from load_run and chkpt
+        resume_path = None # updated from load_run and chkpt 
