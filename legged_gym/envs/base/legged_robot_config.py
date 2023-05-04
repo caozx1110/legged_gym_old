@@ -145,7 +145,7 @@ class LeggedRobotCfg(BaseConfig):
             collision = -1.
             feet_stumble = -0.0 
             action_rate = -0.01
-            stand_still = -0.
+            stand_still = -0.01
 
         only_positive_rewards = True # if true negative total rewards are clipped at zero (avoids early termination problems)
         tracking_sigma = 0.25 # tracking reward = exp(-error^2/sigma)
@@ -247,10 +247,10 @@ class LeggedRobotCfg(BaseConfig):
 #         resume_path = None # updated from load_run and chkpt
         
 
-# NOTE: SAC here!, 不要被命名误导
-class LeggedRobotCfgPPO(BaseConfig):
-    seed = 1
-    runner_class_name = 'OnPolicyRunner'
+# Algorithm config
+class LeggedRobotCfgAlg(BaseConfig):
+    seed = 20021110
+    runner_class_name = 'OffPolicyRunner'
     class policy:
         init_noise_std = 1.0
         actor_hidden_dims = [512, 256, 128]
@@ -263,21 +263,19 @@ class LeggedRobotCfgPPO(BaseConfig):
         
     class algorithm:
         # training params
-        num_learning_epochs=5
+        num_learning_epochs=2
         num_mini_batches=4
-        gamma=0.98
-        reward_scale=0.99
-        learning_rate=1e-4
-        soft_target_tau=0.005
-        target_update_period=1
-        use_automatic_entropy_tuning=True
-        target_entropy=None
-        action_dim=12
+        gamma=0.95
+        learning_rate=5e-4
+        # reward_scale=1
+        # soft_target_tau=0.002
+        # target_update_period=1
+        # target_entropy=None
 
     class runner:
         policy_class_name = 'SoftActorCritic'
         algorithm_class_name = 'SAC'
-        num_steps_per_env = 24 # per iteration
+        num_steps_per_env = 64 # per iteration
         max_iterations = 1500 # number of policy updates
 
         # logging

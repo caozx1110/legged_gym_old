@@ -35,11 +35,11 @@ import torch
 import numpy as np
 
 from rsl_rl.env import VecEnv
-from rsl_rl.runners import OnPolicyRunner
+from rsl_rl.runners import OnPolicyRunner, OffPolicyRunner
 
 from legged_gym import LEGGED_GYM_ROOT_DIR, LEGGED_GYM_ENVS_DIR
 from .helpers import get_args, update_cfg_from_args, class_to_dict, get_load_path, set_seed, parse_sim_params
-from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobotCfgPPO
+from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobotCfgAlg
 
 class TaskRegistry():
     def __init__(self):
@@ -47,7 +47,7 @@ class TaskRegistry():
         self.env_cfgs = {}
         self.train_cfgs = {}
     
-    def register(self, name: str, task_class: VecEnv, env_cfg: LeggedRobotCfg, train_cfg: LeggedRobotCfgPPO):
+    def register(self, name: str, task_class: VecEnv, env_cfg: LeggedRobotCfg, train_cfg: LeggedRobotCfgAlg):
         self.task_classes[name] = task_class
         self.env_cfgs[name] = env_cfg
         self.train_cfgs[name] = train_cfg
@@ -55,7 +55,7 @@ class TaskRegistry():
     def get_task_class(self, name: str) -> VecEnv:
         return self.task_classes[name]
     
-    def get_cfgs(self, name) -> Tuple[LeggedRobotCfg, LeggedRobotCfgPPO]:
+    def get_cfgs(self, name) -> Tuple[LeggedRobotCfg, LeggedRobotCfgAlg]:
         train_cfg = self.train_cfgs[name]
         env_cfg = self.env_cfgs[name]
         # copy seed
@@ -101,7 +101,7 @@ class TaskRegistry():
                             headless=args.headless)
         return env, env_cfg
 
-    def make_alg_runner(self, env, name=None, args=None, train_cfg=None, log_root="default") -> Tuple[OnPolicyRunner, LeggedRobotCfgPPO]:
+    def make_alg_runner(self, env, name=None, args=None, train_cfg=None, log_root="default") -> Tuple[OnPolicyRunner, LeggedRobotCfgAlg]:
         """ Creates the training algorithm  either from a registered namme or from the provided config file.
 
         Args:
@@ -144,7 +144,8 @@ class TaskRegistry():
             log_dir = os.path.join(log_root, datetime.now().strftime('%b%d_%H-%M-%S') + '_' + train_cfg.runner.run_name)
         
         train_cfg_dict = class_to_dict(train_cfg)
-        runner = OnPolicyRunner(env, train_cfg_dict, log_dir, device=args.rl_device)
+        runner_class = eval(train_cfg.runner_class_name)
+        runner = runner_class(env, train_cfg_dict, log_dir, device=args.rl_device)
         #save resume path before creating a new log_dir
         resume = train_cfg.runner.resume
         if resume:

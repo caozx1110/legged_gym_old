@@ -28,7 +28,7 @@
 #
 # Copyright (c) 2021 ETH Zurich, Nikita Rudin
 
-from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobotCfgPPO
+from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobotCfgAlg
 
 class CassieRoughCfg( LeggedRobotCfg ):
     class env( LeggedRobotCfg.env):
@@ -99,13 +99,13 @@ class CassieRoughCfg( LeggedRobotCfg ):
             ang_vel_xy = -0.0
             feet_contact_forces = -0.
 
-class CassieRoughCfgPPO( LeggedRobotCfgPPO ):
+class CassieRoughCfgPPO( LeggedRobotCfgAlg ):
     
-    class runner( LeggedRobotCfgPPO.runner ):
+    class runner( LeggedRobotCfgAlg.runner ):
         run_name = ''
         experiment_name = 'rough_cassie'
 
-    class algorithm( LeggedRobotCfgPPO.algorithm):
+    class algorithm( LeggedRobotCfgAlg.algorithm):
         entropy_coef = 0.01
 
 

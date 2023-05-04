@@ -192,7 +192,8 @@ class LeggedRobot(BaseTask):
             Calls each reward function which had a non-zero scale (processed in self._prepare_reward_function())
             adds each terms to the episode sums and to the total reward
         """
-        self.rew_buf[:] = 0.
+        # NOTE: reward
+        self.rew_buf[:] = 1
         for i in range(len(self.reward_functions)):
             name = self.reward_names[i]
             rew = self.reward_functions[i]() * self.reward_scales[name]
@@ -815,6 +816,7 @@ class LeggedRobot(BaseTask):
 
         return heights.view(self.num_envs, -1) * self.terrain.cfg.vertical_scale
 
+    # NOTE: reward functions
     #------------ reward functions----------------
     def _reward_lin_vel_z(self):
         # Penalize z axis base linear velocity
@@ -839,11 +841,16 @@ class LeggedRobot(BaseTask):
 
     def _reward_dof_vel(self):
         # Penalize dof velocities
-        return torch.sum(torch.square(self.dof_vel), dim=1)
+        # print("vel", self.dof_vel.mean())
+        delta = torch.where(torch.abs(self.dof_vel) < 2, torch.zeros_like(self.dof_vel), self.dof_vel)
+        return torch.sum(torch.square(delta), dim=1)
     
     def _reward_dof_acc(self):
         # Penalize dof accelerations
-        return torch.sum(torch.square((self.last_dof_vel - self.dof_vel) / self.dt), dim=1)
+        delta = (self.last_dof_vel - self.dof_vel) / self.dt
+        # print("acc", delta.mean())
+        torch.where(torch.abs(delta) < 10, torch.zeros_like(delta), torch.square(delta))
+        return torch.sum(torch.square(delta), dim=1)
     
     def _reward_action_rate(self):
         # Penalize changes in actions
