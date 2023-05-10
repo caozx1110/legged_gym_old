@@ -57,3 +57,8 @@ runs
 # other
 *.egg-info
 __pycache__
+
+**/temp.**
+
+**/littledog/*
+!**/littledog/.gitkeep

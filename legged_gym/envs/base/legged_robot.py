@@ -193,7 +193,7 @@ class LeggedRobot(BaseTask):
             adds each terms to the episode sums and to the total reward
         """
         # NOTE: reward
-        self.rew_buf[:] = 1
+        self.rew_buf[:] = 0.
         for i in range(len(self.reward_functions)):
             name = self.reward_names[i]
             rew = self.reward_functions[i]() * self.reward_scales[name]
