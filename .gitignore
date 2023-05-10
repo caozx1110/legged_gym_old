@@ -58,11 +58,7 @@ runs
 *.egg-info
 __pycache__
 
-<<<<<<< HEAD
 **/temp.**
 
 **/littledog/*
 !**/littledog/.gitkeep
-=======
-**/temp.**
->>>>>>> d8167e473b7301dd9fda9127035e604597297001
