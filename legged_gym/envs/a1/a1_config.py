@@ -33,7 +33,7 @@ from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobot
 class A1RoughCfg( LeggedRobotCfg ):
     class terrain( LeggedRobotCfg.terrain ):
         # TODO: 在这里修改地形
-        # mesh_type = 'plane'
+        mesh_type = 'plane'
         
         '''所有地形可视化'''
         # num_rows = 10
@@ -46,9 +46,9 @@ class A1RoughCfg( LeggedRobotCfg ):
         # terrain_proportions = [0, 0, 1, 0, 0, 0, 0, 0]
         
         '''不平坦地形 + 课程学习'''
-        num_rows = 10
-        num_cols = 40
-        terrain_proportions = [0, 1, 0, 0, 0, 0, 0, 0]
+        # num_rows = 10
+        # num_cols = 40
+        # terrain_proportions = [0, 1, 0, 0, 0, 0, 0, 0]
         
         '''阶梯障碍 + 课程学习'''
         # num_rows = 10
@@ -98,9 +98,9 @@ class A1RoughCfg( LeggedRobotCfg ):
         stiffness = {'joint': 20.}  # [N*m/rad]
         damping = {'joint': 0.5}     # [N*m*s/rad]
         # action scale: target angle = actionScale * action + defaultAngle
-        action_scale = 4.0
+        action_scale = 1.0
         # decimation: Number of control action updates @ sim DT per policy DT
-        decimation = 4
+        decimation = 1
 
     class asset( LeggedRobotCfg.asset ):
         file = '{LEGGED_GYM_ROOT_DIR}/resources/robots/a1/urdf/a1.urdf'
@@ -111,7 +111,7 @@ class A1RoughCfg( LeggedRobotCfg ):
         self_collisions = 1 # 1 to disable, 0 to enable...bitwise filter
   
     class rewards( LeggedRobotCfg.rewards ):
-        only_positive_rewards = True # if true negative total rewards are clipped at zero (avoids early termination problems)
+        only_positive_rewards = False # if true negative total rewards are clipped at zero (avoids early termination problems)
         tracking_sigma = 0.25 # tracking reward = exp(-error^2/sigma)
         # percentage of urdf limits, values above this limit are penalized
         soft_dof_vel_limit = 1.

@@ -118,6 +118,13 @@ class LeggedRobot(BaseTask):
         self.base_lin_vel[:] = quat_rotate_inverse(self.base_quat, self.root_states[:, 7:10])
         self.base_ang_vel[:] = quat_rotate_inverse(self.base_quat, self.root_states[:, 10:13])
         self.projected_gravity[:] = quat_rotate_inverse(self.base_quat, self.gravity_vec)
+        
+        # contact state filtering
+        self.foot_contacts_counter += self.contact_forces[:, self.feet_indices, 2] > 1.0
+        self.foot_contacts_counter *= self.contact_forces[:, self.feet_indices, 2] > 1.0
+        # window_size means that the contact is considered if it was active for at least window_size steps
+        window_size = 10
+        self.foot_contacts = torch.clip(self.foot_contacts_counter / window_size, 0, 1)
 
         self._post_physics_step_callback()
 
@@ -210,15 +217,24 @@ class LeggedRobot(BaseTask):
     def compute_observations(self):
         """ Computes observations
         """
-        # NOTE: observation
         self.obs_buf = torch.cat((  self.base_lin_vel * self.obs_scales.lin_vel,
                                     self.base_ang_vel  * self.obs_scales.ang_vel,
-                                    self.projected_gravity,
+                                    self.base_quat,
                                     self.commands[:, :3] * self.commands_scale,
                                     (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos,
                                     self.dof_vel * self.obs_scales.dof_vel,
+                                    self.foot_contacts,
                                     self.actions
                                     ),dim=-1)
+        # NOTE: observation
+        # self.obs_buf = torch.cat((  self.base_lin_vel * self.obs_scales.lin_vel,
+        #                             self.base_ang_vel  * self.obs_scales.ang_vel,
+        #                             self.projected_gravity,
+        #                             self.commands[:, :3] * self.commands_scale,
+        #                             (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos,
+        #                             self.dof_vel * self.obs_scales.dof_vel,
+        #                             self.actions
+        #                             ),dim=-1)
         # add perceptive inputs if not blind
         if self.cfg.terrain.measure_heights:
             heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
@@ -501,7 +517,11 @@ class LeggedRobot(BaseTask):
         self.base_quat = self.root_states[:, 3:7]
 
         self.contact_forces = gymtorch.wrap_tensor(net_contact_forces).view(self.num_envs, -1, 3) # shape: num_envs, num_bodies, xyz axis
-
+        
+        # NOTE: foot contacts [0, 1], 0: no contact, 1: contact
+        self.foot_contacts = self.contact_forces[:, self.feet_indices, 2] > 1. # shape: num_envs, num_feet
+        self.foot_contacts_counter = torch.zeros(self.num_envs, len(self.feet_indices), dtype=torch.float, device=self.device, requires_grad=False) 
+        
         # initialize some data used later on
         self.common_step_counter = 0
         self.extras = {}
