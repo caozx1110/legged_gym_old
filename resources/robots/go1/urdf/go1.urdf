@@ -1,4 +1,5 @@
 <?xml version="1.0" ?>
+<!-- modified from the paper 'walk these ways', just correct the mass of trunk, can be transfer to real robot -->
 <robot name="go1_description" xmlns:xacro="http://www.ros.org/wiki/xacro">
   <material name="black">
     <color rgba="0.0 0.0 0.0 1.0"/>
@@ -58,7 +59,8 @@
     </collision>
     <inertial>
       <origin rpy="0 0 0" xyz="0.011611 0.004437 0.000108"/>
-      <mass value="4.8"/>
+      <!-- <mass value="4.8"/> -->
+      <mass value="6.49"/>
       <inertia ixx="0.016130741919" ixy="0.000593180607" ixz="7.324662e-06" iyy="0.036507810812" iyz="2.0969537e-05" izz="0.044693872053"/>
     </inertial>
   </link>
@@ -92,8 +94,8 @@
     <parent link="trunk"/>
     <child link="FR_hip"/>
     <axis xyz="1 0 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-0.802851455917" upper="0.802851455917" velocity="50"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.863" upper="0.863" velocity="30.1"/>
   </joint>
   <link name="FR_hip">
     <visual>
@@ -134,8 +136,8 @@
     <parent link="FR_hip"/>
     <child link="FR_thigh"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-1.0471975512" upper="4.18879020479" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.686" upper="4.501" velocity="30.1"/>
   </joint>
   <link name="FR_thigh">
     <visual>
@@ -162,8 +164,8 @@
     <parent link="FR_thigh"/>
     <child link="FR_calf"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-2.69653369433" upper="-0.916297857297" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="35.55" lower="-2.818" upper="-0.888" velocity="20.06"/>
   </joint>
   <link name="FR_calf">
     <visual>
@@ -215,8 +217,8 @@
     <parent link="trunk"/>
     <child link="FL_hip"/>
     <axis xyz="1 0 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-0.802851455917" upper="0.802851455917" velocity="50"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.863" upper="0.863" velocity="30.1"/>
   </joint>
   <link name="FL_hip">
     <visual>
@@ -257,8 +259,8 @@
     <parent link="FL_hip"/>
     <child link="FL_thigh"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-1.0471975512" upper="4.18879020479" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.686" upper="4.501" velocity="30.1"/>
   </joint>
   <link name="FL_thigh">
     <visual>
@@ -285,8 +287,8 @@
     <parent link="FL_thigh"/>
     <child link="FL_calf"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-2.69653369433" upper="-0.916297857297" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="35.55" lower="-2.818" upper="-0.888" velocity="20.06"/>
   </joint>
   <link name="FL_calf">
     <visual>
@@ -294,7 +296,7 @@
       <geometry>
         <mesh filename="../meshes/calf.stl" scale="1 1 1"/>
       </geometry>
-      <material name="silver"/>
+      <material name="black"/>
     </visual>
     <collision>
       <origin rpy="0 1.57079632679 0" xyz="0 0 -0.1065"/>
@@ -338,8 +340,8 @@
     <parent link="trunk"/>
     <child link="RR_hip"/>
     <axis xyz="1 0 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-0.802851455917" upper="0.802851455917" velocity="50"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.863" upper="0.863" velocity="30.1"/>
   </joint>
   <link name="RR_hip">
     <visual>
@@ -380,8 +382,8 @@
     <parent link="RR_hip"/>
     <child link="RR_thigh"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-1.0471975512" upper="4.18879020479" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.686" upper="4.501" velocity="30.1"/>
   </joint>
   <link name="RR_thigh">
     <visual>
@@ -408,8 +410,8 @@
     <parent link="RR_thigh"/>
     <child link="RR_calf"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-2.69653369433" upper="-0.916297857297" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="35.55" lower="-2.818" upper="-0.888" velocity="20.06"/>
   </joint>
   <link name="RR_calf">
     <visual>
@@ -461,8 +463,8 @@
     <parent link="trunk"/>
     <child link="RL_hip"/>
     <axis xyz="1 0 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-0.802851455917" upper="0.802851455917" velocity="50"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.863" upper="0.863" velocity="30.1"/>
   </joint>
   <link name="RL_hip">
     <visual>
@@ -503,8 +505,8 @@
     <parent link="RL_hip"/>
     <child link="RL_thigh"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-1.0471975512" upper="4.18879020479" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="23.7" lower="-0.686" upper="4.501" velocity="30.1"/>
   </joint>
   <link name="RL_thigh">
     <visual>
@@ -531,8 +533,8 @@
     <parent link="RL_thigh"/>
     <child link="RL_calf"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0" friction="0"/>
-    <limit effort="33.5" lower="-2.69653369433" upper="-0.916297857297" velocity="28"/>
+    <dynamics damping="0.0" friction="0.0"/>
+    <limit effort="35.55" lower="-2.818" upper="-0.888" velocity="20.06"/>
   </joint>
   <link name="RL_calf">
     <visual>
