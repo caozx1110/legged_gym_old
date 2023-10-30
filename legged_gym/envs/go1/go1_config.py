@@ -41,10 +41,10 @@ class Go1RoughCfg( LeggedRobotCfg ):
         episode_length_s = 20 # episode length in seconds
         
     class terrain( LeggedRobotCfg.terrain ):
-        measure_heights = False
+        # measure_heights = False
         
         # TODO: 在这里修改地形
-        mesh_type = 'plane'
+        # mesh_type = 'plane'
         
         '''所有地形可视化'''
         # num_rows = 10
